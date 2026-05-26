@@ -5,6 +5,7 @@ import os
 import re
 import statistics
 import subprocess
+import sys
 import time
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -14,10 +15,15 @@ from typing import Any
 from routerclamp_strict_quality_scout import resume_codex_gpu_helper, stop_codex_gpu_helper
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from qpu_mcp_lab.config import llama_bin, model_path
+
 LOG_DIR = ROOT / "logs"
 DATA_DIR = ROOT / "data"
-BIN = Path("/Users/jodyshackelford/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli")
-MODEL = Path("/Users/jodyshackelford/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf")
+BIN = llama_bin()
+MODEL = model_path()
 
 
 def chat(content: str) -> str:

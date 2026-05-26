@@ -1,10 +1,16 @@
 .venv/
 __pycache__/
 *.pyc
+config.json
+.env
+.env.*
+models/
+data/*.cache
+data/*routercensus*.json
+data/*.census
 data/*.sqlite
 data/*.sqlite-*
 logs/*
 !logs/.gitkeep
 *.log
 .DS_Store
-

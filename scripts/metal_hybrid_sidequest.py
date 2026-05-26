@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -18,8 +19,14 @@ from qpu_mcp_lab.bench import run_config
 from routerclamp_strict_quality_scout import resume_codex_gpu_helper, stop_codex_gpu_helper, summarize
 
 
-CPU_BIN = "/Users/jodyshackelford/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli"
-METAL_BIN = "/Users/jodyshackelford/src/ik_llama.cpp/build-air-metal-omp/bin/llama-cli"
+CPU_BIN = os.environ.get(
+    "QPU_MCP_LAB_LLAMA_BIN",
+    str(Path("~/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli").expanduser()),
+)
+METAL_BIN = os.environ.get(
+    "QPU_MCP_LAB_METAL_LLAMA_BIN",
+    str(Path("~/src/ik_llama.cpp/build-air-metal-omp/bin/llama-cli").expanduser()),
+)
 
 PROMPT = (
     "<|im_start|>user\n"

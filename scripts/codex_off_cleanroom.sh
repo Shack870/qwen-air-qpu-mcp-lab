@@ -1,9 +1,9 @@
 #!/bin/zsh
 set -u
 
-LAB="/Users/jodyshackelford/qwen-air-tests/qpu-mcp-lab"
-LLAMA="/Users/jodyshackelford/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli"
-MODEL="/Users/jodyshackelford/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf"
+LAB="${QPU_MCP_LAB_ROOT:-$HOME/qwen-air-tests/qpu-mcp-lab}"
+LLAMA="${QPU_MCP_LAB_LLAMA_BIN:-$HOME/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli}"
+MODEL="${QPU_MCP_LAB_MODEL_PATH:-$HOME/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf}"
 OUTDIR="$LAB/logs/cleanroom-$(date +%Y%m%d-%H%M%S)"
 PROMPT='<|im_start|>user
 Continue this comma-separated list of Mars facts: red planet, thin atmosphere,<|im_end|>

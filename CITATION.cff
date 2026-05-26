@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this harness or reproduce the Qwen Air experiment, please cite it."
+title: "Quantum-Enhanced Hyperparameter Tuning for High-Performance On-Device CPU-Only Inference of Mixture-of-Experts LLMs on Legacy Hardware"
+version: "0.1.0"
+date-released: "2026-05-26"
+authors:
+  - family-names: "Shackelford"
+    given-names: "Jody"
+    affiliation: "University of Arkansas Grantham"
+abstract: "A reproducible benchmark and MCP/QPU optimization harness for running Qwen3-30B-A3B MoE GGUF inference on an 8 GB 2017 Intel MacBook Air."
+keywords:
+  - "large language models"
+  - "mixture of experts"
+  - "llama.cpp"
+  - "IBM Quantum"
+  - "MCP"
+  - "edge inference"
+license: "MIT"

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qwen-air-qpu-mcp-lab"
+version = "0.1.0"
+description = "MCP and QPU optimization harness for Qwen3 MoE inference on legacy Mac hardware."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "Jody Shackelford" }
+]
+dependencies = [
+  "mcp[cli]>=1.27.1",
+  "qiskit>=2.4.1",
+  "qiskit-ibm-runtime>=0.47.0",
+  "qiskit-aer>=0.17.2",
+  "numpy>=2.4",
+  "pydantic>=2.13"
+]
+
+[project.scripts]
+qpu-mcp-lab = "qpu_mcp_lab.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qpu_mcp_lab*"]

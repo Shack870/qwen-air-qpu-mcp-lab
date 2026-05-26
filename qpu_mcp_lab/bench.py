@@ -14,7 +14,7 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 from . import db
-from .config import DEFAULT_LLAMA_REPO, LOG_DIR, PROMPTS, ensure_dirs, llama_bin, model_path
+from .config import LOG_DIR, PROMPTS, ensure_dirs, llama_bin, llama_repo, model_path
 from .objective import score_run
 
 TIMING_PATTERNS = {
@@ -203,11 +203,12 @@ def file_fingerprint(path: Path) -> str | None:
 
 
 def llama_commit() -> str | None:
-    if not DEFAULT_LLAMA_REPO.exists():
+    repo = llama_repo()
+    if not repo.exists():
         return None
     try:
         out = subprocess.run(
-            ["git", "-C", str(DEFAULT_LLAMA_REPO), "rev-parse", "--short", "HEAD"],
+            ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
             capture_output=True,
             text=True,
             timeout=5,

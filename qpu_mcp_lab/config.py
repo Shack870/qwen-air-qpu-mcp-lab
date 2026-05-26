@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -10,12 +11,12 @@ LOG_DIR = ROOT / "logs"
 DB_PATH = DATA_DIR / "qpu_lab.sqlite"
 CONFIG_PATH = ROOT / "config.json"
 
-DEFAULT_LLAMA_BIN = Path("/Users/jodyshackelford/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli")
+DEFAULT_LLAMA_BIN = Path("~/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli").expanduser()
 DEFAULT_MODEL_PATH = Path(
-    "/Users/jodyshackelford/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/"
+    "~/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/"
     "Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf"
-)
-DEFAULT_LLAMA_REPO = Path("/Users/jodyshackelford/src/ik_llama.cpp")
+).expanduser()
+DEFAULT_LLAMA_REPO = Path("~/src/ik_llama.cpp").expanduser()
 DEFAULT_SAFE_MEMORY_GB = 6.5
 
 PROMPTS: dict[str, str] = {
@@ -49,7 +50,8 @@ def load_config() -> dict[str, Any]:
 
 
 def setting(name: str, default: Any) -> Any:
-    return load_config().get(name, default)
+    env_name = f"QPU_MCP_LAB_{name.upper()}"
+    return os.environ.get(env_name, load_config().get(name, default))
 
 
 def llama_bin() -> Path:
@@ -58,6 +60,10 @@ def llama_bin() -> Path:
 
 def model_path() -> Path:
     return Path(setting("model_path", str(DEFAULT_MODEL_PATH))).expanduser()
+
+
+def llama_repo() -> Path:
+    return Path(setting("llama_repo", str(DEFAULT_LLAMA_REPO))).expanduser()
 
 
 def safe_memory_gb() -> float:
