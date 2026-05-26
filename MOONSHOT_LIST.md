@@ -19,6 +19,11 @@ This file is the lab board for serious, testable ideas. It separates what we tru
 
 ## Latest Routerclamp Findings
 
+- Added opt-in `LLAMA_ROUTER_CENSUS=/path` logging for the SER router path. It records layer, selected expert IDs, selected probabilities, active expert count, and selected probability mass during decode-sized rows.
+- First census on the record family (`ser 3,1`, cheap `24:30` top-2) showed the middle band `24:30` has the lowest selected top-3 mass (`~0.12-0.14`) and broad expert spread, while late layers are more concentrated but still not safely top-1.
+- Inverted Routerclamp failed: global `ser 1,5` with selected layer rescues reached 15.63 tok/s, but every strict Serbia probe immediately collapsed into junk. The smallest quality-safe subnetwork is not a top-1 expert path with a few rescued bands.
+- Hotset clamp was prototyped and backed out. A Mars-only top-48 hotset slowed badly and caused repetition, and the implementation point polluted normal throughput. Router census remains useful; hotset clamping needs a broader corpus plus fallback and a less invasive implementation point.
+- App-state gating matters: one-off runs without pausing the Codex GPU helper fell to ~2-3 tok/s; the same short record-shape smoke recovered to 13.30 tok/s with the helper paused. Serious benchmark scripts should keep using the helper pause/resume wrapper.
 - Added `LLAMA_SER_FULL_RANGES` to the ik_llama.cpp SER path so experiments can restore full routing in arbitrary layer bands such as `18:24` or `24:30`.
 - `ser 2,0.65` plus full bands `18:24`, `24:30`, `30:36`, or `42:48` can pass strict Serbia/Mars/prime gates in the cold scout, proving quality can be rescued by layer localization.
 - On the record-shaped lane (`b2560`, `ub96`, `-np 2 -ns 2 -pps`), static band rescue stayed quality-clean but slower than `ser 3,1`.
