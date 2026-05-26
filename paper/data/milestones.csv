@@ -1,0 +1,9 @@
+label,gen_tps,kind,evidence
+Out-of-box,0.09,baseline,lab notebook
+Early stable,2.4,manual,lab notebook
+Manual frontier,6.49,manual,lab notebook
+Pi 5 report,7.5,external,Reddit 7-8 t/s midpoint
+QPU boom,13.12,quantum,run 635
+Clean-room,13.91,record,codex-off scoreboard
+Strict Mars,14.03,record,run 1490
+Corrupted edge,16.53,unsafe,run 814

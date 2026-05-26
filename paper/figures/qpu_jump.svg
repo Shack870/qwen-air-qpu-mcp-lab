@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #18222f; }
+    .title { font-size: 22px; font-weight: 700; }
+    .subtitle { font-size: 12px; fill: #506070; }
+    .axis { stroke: #b9c3cf; stroke-width: 1; }
+    .grid { stroke: #e4e9ef; stroke-width: 1; }
+    .label { font-size: 12px; fill: #29384a; }
+    .small { font-size: 11px; fill: #5c6978; }
+    .value { font-size: 12px; font-weight: 700; fill: #111827; }
+    .note { font-size: 11px; fill: #667085; }
+  </style>
+  <rect x="0" y="0" width="1100" height="650" fill="#ffffff"/>
+  <text class="title" x="86" y="36">Quantum-Guided Search Jump</text>
+  <text class="subtitle" x="86" y="58">The QPU sampled compact QUBO candidates; the MacBook benchmark remained the judge</text>
+  <line class="grid" x1="86" y1="500.0" x2="1058" y2="500.0"/>
+  <text class="small" text-anchor="end" x="76" y="504.0">0</text>
+  <line class="grid" x1="86" y1="447.8" x2="1058" y2="447.8"/>
+  <text class="small" text-anchor="end" x="76" y="451.8">2</text>
+  <line class="grid" x1="86" y1="395.5" x2="1058" y2="395.5"/>
+  <text class="small" text-anchor="end" x="76" y="399.5">4</text>
+  <line class="grid" x1="86" y1="343.2" x2="1058" y2="343.2"/>
+  <text class="small" text-anchor="end" x="76" y="347.2">6</text>
+  <line class="grid" x1="86" y1="291.0" x2="1058" y2="291.0"/>
+  <text class="small" text-anchor="end" x="76" y="295.0">8</text>
+  <line class="grid" x1="86" y1="238.8" x2="1058" y2="238.8"/>
+  <text class="small" text-anchor="end" x="76" y="242.8">10</text>
+  <line class="grid" x1="86" y1="186.5" x2="1058" y2="186.5"/>
+  <text class="small" text-anchor="end" x="76" y="190.5">12</text>
+  <line class="grid" x1="86" y1="134.2" x2="1058" y2="134.2"/>
+  <text class="small" text-anchor="end" x="76" y="138.2">14</text>
+  <line class="grid" x1="86" y1="82.0" x2="1058" y2="82.0"/>
+  <text class="small" text-anchor="end" x="76" y="86.0">16</text>
+  <line class="axis" x1="86" y1="82" x2="86" y2="500"/>
+  <line class="axis" x1="86" y1="500" x2="1058" y2="500"/>
+  <text class="small" text-anchor="middle" transform="translate(24 291.0) rotate(-90)">generation tokens/sec</text>
+  <rect x="86.0" y="330.4" width="178.4" height="169.6" rx="4" fill="#2563eb"/>
+  <text class="value" text-anchor="middle" x="175.2" y="322.4">6.49</text>
+  <text class="label" text-anchor="middle" x="175.2" y="524.0">Manual frontier</text>
+  <rect x="284.4" y="304.1" width="178.4" height="195.9" rx="4" fill="#7c3aed"/>
+  <text class="value" text-anchor="middle" x="373.6" y="296.1">7.50</text>
+  <text class="label" text-anchor="middle" x="373.6" y="524.0">Pi 5 report</text>
+  <text class="label" text-anchor="middle" x="373.6" y="539.0">midpoint</text>
+  <rect x="482.8" y="157.2" width="178.4" height="342.8" rx="4" fill="#0891b2"/>
+  <text class="value" text-anchor="middle" x="572.0" y="149.2">13.12</text>
+  <text class="label" text-anchor="middle" x="572.0" y="524.0">QPU first boom</text>
+  <rect x="681.2" y="136.6" width="178.4" height="363.4" rx="4" fill="#16a34a"/>
+  <text class="value" text-anchor="middle" x="770.4" y="128.6">13.91</text>
+  <text class="label" text-anchor="middle" x="770.4" y="524.0">Clean-room</text>
+  <rect x="879.6" y="133.5" width="178.4" height="366.5" rx="4" fill="#16a34a"/>
+  <text class="value" text-anchor="middle" x="968.8" y="125.5">14.03</text>
+  <text class="label" text-anchor="middle" x="968.8" y="524.0">Strict Mars</text>
+  <text class="label" text-anchor="middle" x="968.8" y="539.0">record</text>
+  <text class="note" x="86" y="624">Pi comparison uses the 7-8 tok/s Reddit-reported 8GB Pi 5 range midpoint.</text>
+</svg>

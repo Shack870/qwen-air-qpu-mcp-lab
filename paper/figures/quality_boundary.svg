@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #18222f; }
+    .title { font-size: 22px; font-weight: 700; }
+    .subtitle { font-size: 12px; fill: #506070; }
+    .axis { stroke: #b9c3cf; stroke-width: 1; }
+    .grid { stroke: #e4e9ef; stroke-width: 1; }
+    .label { font-size: 12px; fill: #29384a; }
+    .small { font-size: 11px; fill: #5c6978; }
+    .value { font-size: 12px; font-weight: 700; fill: #111827; }
+    .note { font-size: 11px; fill: #667085; }
+  </style>
+  <rect x="0" y="0" width="1100" height="650" fill="#ffffff"/>
+  <text class="title" x="86" y="36">Speed/Quality Boundary</text>
+  <text class="subtitle" x="86" y="58">A faster decode lane existed, but the paper record is the quality-gated 14.03 tok/s run</text>
+  <line class="grid" x1="86" y1="500.0" x2="1058" y2="500.0"/>
+  <text class="small" text-anchor="end" x="76" y="504.0">0</text>
+  <line class="grid" x1="86" y1="453.6" x2="1058" y2="453.6"/>
+  <text class="small" text-anchor="end" x="76" y="457.6">2</text>
+  <line class="grid" x1="86" y1="407.1" x2="1058" y2="407.1"/>
+  <text class="small" text-anchor="end" x="76" y="411.1">4</text>
+  <line class="grid" x1="86" y1="360.7" x2="1058" y2="360.7"/>
+  <text class="small" text-anchor="end" x="76" y="364.7">6</text>
+  <line class="grid" x1="86" y1="314.2" x2="1058" y2="314.2"/>
+  <text class="small" text-anchor="end" x="76" y="318.2">8</text>
+  <line class="grid" x1="86" y1="267.8" x2="1058" y2="267.8"/>
+  <text class="small" text-anchor="end" x="76" y="271.8">10</text>
+  <line class="grid" x1="86" y1="221.3" x2="1058" y2="221.3"/>
+  <text class="small" text-anchor="end" x="76" y="225.3">12</text>
+  <line class="grid" x1="86" y1="174.9" x2="1058" y2="174.9"/>
+  <text class="small" text-anchor="end" x="76" y="178.9">14</text>
+  <line class="grid" x1="86" y1="128.4" x2="1058" y2="128.4"/>
+  <text class="small" text-anchor="end" x="76" y="132.4">16</text>
+  <line class="grid" x1="86" y1="82.0" x2="1058" y2="82.0"/>
+  <text class="small" text-anchor="end" x="76" y="86.0">18</text>
+  <line class="axis" x1="86" y1="82" x2="86" y2="500"/>
+  <line class="axis" x1="86" y1="500" x2="1058" y2="500"/>
+  <text class="small" text-anchor="middle" transform="translate(24 291.0) rotate(-90)">generation tokens/sec</text>
+  <rect x="86.0" y="174.2" width="476.0" height="325.8" rx="4" fill="#16a34a"/>
+  <text class="value" text-anchor="middle" x="324.0" y="166.2">14.03</text>
+  <text class="label" text-anchor="middle" x="324.0" y="524.0">Strict-quality</text>
+  <text class="label" text-anchor="middle" x="324.0" y="539.0">Mars</text>
+  <rect x="582.0" y="116.1" width="476.0" height="383.9" rx="4" fill="#dc2626"/>
+  <text class="value" text-anchor="middle" x="820.0" y="108.1">16.53</text>
+  <text class="label" text-anchor="middle" x="820.0" y="524.0">Speed-only</text>
+  <text class="label" text-anchor="middle" x="820.0" y="539.0">corrupted</text>
+  <text class="note" x="86" y="624">Run 814 reached 16.53 tok/s but emitted incoherent text; run 1490 is the strict-pass record.</text>
+</svg>
