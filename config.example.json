@@ -1,0 +1,8 @@
+{
+  "llama_bin": "/Users/jodyshackelford/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli",
+  "model_path": "/Users/jodyshackelford/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf",
+  "safe_memory_gb": 6.5,
+  "default_backend": "local-simulator",
+  "allow_real_qpu_jobs_by_default": false
+}
+
