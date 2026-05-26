@@ -1,4 +1,4 @@
-# Qwen Air QPU/MCP Lab
+# Qwen Air Quantum Processing Unit/MCP Lab
 
 Quantum-enhanced autoresearch for high-performance, CPU-only Mixture-of-Experts
 LLM inference on legacy hardware.
@@ -24,7 +24,7 @@ The short version:
 
 ## What Is Novel Here
 
-This is not a claim that an IBM QPU ran Qwen. It did not.
+This is not a claim that an IBM Quantum Processing Unit ran Qwen. It did not.
 
 The core contribution is the synchronized loop:
 
@@ -40,7 +40,7 @@ Human Experimenter sets the goal and constraints
     -> the loop repeats
 ```
 
-The QPU improves the research loop's candidate selection. The MacBook remains
+The Quantum Processing Unit improves the research loop's candidate selection. The MacBook remains
 the judge. The model remains local. The result is a small hybrid quantum
 optimization lab for routed MoE inference.
 
@@ -51,12 +51,12 @@ See the paper draft:
 ## Repository Map
 
 - `paper/` - paper draft, selected run snapshots, and generated SVG figures
-- `qpu_mcp_lab/` - benchmark harness, objective scorer, optimizer, QUBO builder,
+- `Quantum Processing Unit_mcp_lab/` - benchmark harness, objective scorer, optimizer, QUBO builder,
   IBM Quantum adapter, and MCP-style server
 - `scripts/` - experiment drivers and reproducibility scripts
 - `docs/REPRODUCIBILITY.md` - validation protocol
 - `docs/RESULTS.md` - result narrative and milestone summary
-- `SECURITY.md` - secret handling and QPU guardrails
+- `SECURITY.md` - secret handling and Quantum Processing Unit guardrails
 - `config.example.json` - local config template
 
 ## Requirements
@@ -69,7 +69,7 @@ You need:
 - a local `llama-cli` or compatible fork build
 - the ByteShape GGUF model file:
   `Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf`
-- optional IBM Quantum credentials for real QPU jobs
+- optional IBM Quantum credentials for real Quantum Processing Unit jobs
 
 Reference local paths from the original lab:
 
@@ -81,8 +81,8 @@ Reference local paths from the original lab:
 ## Quick Start
 
 ```bash
-git clone https://github.com/Shack870/qwen-air-qpu-mcp-lab.git
-cd qwen-air-qpu-mcp-lab
+git clone https://github.com/Shack870/qwen-air-Quantum Processing Unit-mcp-lab.git
+cd qwen-air-Quantum Processing Unit-mcp-lab
 
 python3 -m venv .venv
 . .venv/bin/activate
@@ -100,15 +100,15 @@ Edit `config.json`:
   "llama_repo": "~/src/ik_llama.cpp",
   "safe_memory_gb": 6.5,
   "default_backend": "local-simulator",
-  "allow_real_qpu_jobs_by_default": false
+  "allow_real_Quantum Processing Unit_jobs_by_default": false
 }
 ```
 
 You can also provide paths through environment variables:
 
 ```bash
-export QPU_MCP_LAB_LLAMA_BIN="$HOME/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli"
-export QPU_MCP_LAB_MODEL_PATH="$HOME/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf"
+export Quantum Processing Unit_MCP_LAB_LLAMA_BIN="$HOME/src/ik_llama.cpp/build-air-iqk-lean/bin/llama-cli"
+export Quantum Processing Unit_MCP_LAB_MODEL_PATH="$HOME/qwen-air-tests/models/byteshape-qwen3-30b-a3b-2507/Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf"
 ```
 
 Validate the environment:
@@ -120,7 +120,7 @@ Validate the environment:
 Initialize the database:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli init-db
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli init-db
 ```
 
 ## Reproduce The Strict Record Lane
@@ -128,7 +128,7 @@ Initialize the database:
 Run the record-family config:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli run --config-json '{
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli run --config-json '{
   "label": "strict_record_reproduction",
   "prompt": "<|im_start|>user\nContinue this comma-separated list of Mars facts: red planet, thin atmosphere,<|im_end|>\n<|im_start|>assistant\n",
   "ctx_size": 16384,
@@ -158,8 +158,8 @@ Reference results from the original machine:
 
 - strict record: `14.03 tok/s`
 - clean-room lane: `13.91 tok/s`
-- first QPU-informed jump: `13.12 tok/s`
-- classical frontier before QPU sampling: `6.49 tok/s`
+- first Quantum Processing Unit-informed jump: `13.12 tok/s`
+- classical frontier before Quantum Processing Unit sampling: `6.49 tok/s`
 - original proof-of-life baseline: about `0.09 tok/s`
 
 Exact repeats vary with thermals, page-cache state, context switches, and prompt
@@ -215,38 +215,38 @@ For safety, Keychain storage is preferred.
 Check credential status without printing secrets:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli quantum-credentials
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli quantum-credentials
 ```
 
 List available IBM backends:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli quantum-backends
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli quantum-backends
 ```
 
-Real QPU submission is guarded. The harness defaults to dry-run or local
-simulation unless the command includes `--allow-real-qpu`.
+Real Quantum Processing Unit submission is guarded. The harness defaults to dry-run or local
+simulation unless the command includes `--allow-real-Quantum Processing Unit`.
 
 Example guarded workflow:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli build-qubo
-.venv/bin/python -m qpu_mcp_lab.cli sweep-qaoa-angles --limit 5
-.venv/bin/python -m qpu_mcp_lab.cli submit-micro-frontier \
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli build-qubo
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli sweep-qaoa-angles --limit 5
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli submit-micro-frontier \
   --backend ibm_fez \
   --shots 256 \
-  --allow-real-qpu
+  --allow-real-Quantum Processing Unit
 ```
 
 After an IBM job completes:
 
 ```bash
-.venv/bin/python -m qpu_mcp_lab.cli quantum-jobs --limit 5
-.venv/bin/python -m qpu_mcp_lab.cli job-result JOB_ID --refresh
-.venv/bin/python -m qpu_mcp_lab.cli decode-job-candidates JOB_ID --top-k 12
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli quantum-jobs --limit 5
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli job-result JOB_ID --refresh
+.venv/bin/python -m Quantum Processing Unit_mcp_lab.cli decode-job-candidates JOB_ID --top-k 12
 ```
 
-The decoded candidates still need to be tested locally. The QPU suggests; the
+The decoded candidates still need to be tested locally. The Quantum Processing Unit suggests; the
 MacBook judges.
 
 ## Run The MCP Server
@@ -282,7 +282,7 @@ python3 paper/make_figures.py
 Generated figures:
 
 - `paper/figures/throughput_progression.svg`
-- `paper/figures/qpu_jump.svg`
+- `paper/figures/Quantum Processing Unit_jump.svg`
 - `paper/figures/quality_boundary.svg`
 - `paper/figures/prompt_examples.svg`
 
@@ -292,7 +292,7 @@ Generated figures:
 - IBM secrets are not included.
 - `config.json`, `.env`, logs, SQLite WAL/SHM files, and local model files are
   ignored by Git.
-- Real IBM QPU use requires an explicit `--allow-real-qpu` flag.
+- Real IBM Quantum Processing Unit use requires an explicit `--allow-real-Quantum Processing Unit` flag.
 - Publish benchmark claims with command, output, quality gate, context length,
   page faults, swaps, and system state.
 
