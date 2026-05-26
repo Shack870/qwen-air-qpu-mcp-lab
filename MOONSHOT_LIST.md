@@ -4,7 +4,8 @@ This file is the lab board for serious, testable ideas. It separates what we tru
 
 ## Current Records
 
-- Quality baseline: 13.91 tok/s, `ser 3,1`, `q6_0/q6_0`, `ctx 16384`, `b2560`, `ub96`, `-np 2 -ns 2 -pps`.
+- Strict quality baseline: 14.03 tok/s, `ser 3,1`, `q6_0/q6_0`, `ctx 16384`, `b2456`, `ub144`, cheap layers `24:30` at top-2, passed Serbia/Mars/prime.
+- Clean-room aggregate lane: 13.91 tok/s, `ser 3,1`, `q6_0/q6_0`, `ctx 16384`, `b2560`, `ub96`, `-np 2 -ns 2 -pps`.
 - Speed-only high-water mark: 16.53 tok/s, `ser 1,5`, `q6_0/q6_0`, `ctx 16384`, `b2304`, `ub104`.
 - Key warning: direct `ser 1,*` has produced factual-output corruption, so it is not a quality record yet.
 
@@ -35,6 +36,10 @@ This file is the lab board for serious, testable ideas. It separates what we tru
   - Test shape: only revisit after Routerclamp source work, and measure quality plus page faults rather than raw tok/s alone.
 - Hot-expert GGUF repack: keep shared weights and routers intact, preserve hot experts at higher quality, and demote or remove cold experts.
 - Self-speculative MoE: use a reduced-expert Qwen path as a draft model and verify with the proven fuller path.
+  - Status: tested with `llama-speculative` on 2026-05-26.
+  - Patch made: `llama-speculative` now honors draft context, draft KV types, and `LLAMA_DRAFT_SER`.
+  - Findings: Qwen3-0.6B Q8 draft needed a BOS override but accepted 0/128 drafted tokens. Same-target drafts with `LLAMA_DRAFT_SER=1,5`, `2,0.65`, and even `3,1` also accepted 0 tokens in the current example path.
+  - Conclusion: do not spend more benchmark time here until we either fix the speculative example's Qwen alignment or build a purpose-trained/metadata-compatible draft.
 - Router census: log selected experts by layer/token, then build hot sets and fallback thresholds from measured behavior instead of guesses.
 - SSD cold-expert warehouse: use SSD for cold experts only, with hot expert residency and prefetch informed by router statistics.
 
