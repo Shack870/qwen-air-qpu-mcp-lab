@@ -80,6 +80,8 @@ class BenchConfig(BaseModel):
     env_ser_cheap2_min: int | None = Field(default=None, ge=0, le=8)
     env_ser_cheap2_thresh: float | None = Field(default=None, gt=0.0, le=16.0)
     env_ser_cheap2_max_ntokens: int | None = Field(default=None, ge=0, le=8192)
+    env_ser_adaptive_ranges: str | None = None
+    env_ser_adaptive_third_ratio: float | None = Field(default=None, gt=0.0, le=1.0)
     llama_bin_override: str | None = None
     model_path_override: str | None = None
     extra_args: list[str] = Field(default_factory=list)
@@ -118,7 +120,7 @@ class BenchConfig(BaseModel):
             raise ValueError("smart_expert_reduction must look like '3,1' or '2,0.85'")
         return value
 
-    @field_validator("env_ser_full_ranges", "env_ser_cheap_ranges", "env_ser_cheap2_ranges")
+    @field_validator("env_ser_full_ranges", "env_ser_cheap_ranges", "env_ser_cheap2_ranges", "env_ser_adaptive_ranges")
     @classmethod
     def env_ser_full_ranges_safe(cls, value: str | None) -> str | None:
         if value in (None, ""):
@@ -331,6 +333,10 @@ def run_config(config: dict[str, Any] | BenchConfig) -> dict[str, Any]:
         env_pairs.append(f"LLAMA_SER_CHEAP2_THRESH={cfg.env_ser_cheap2_thresh}")
     if cfg.env_ser_cheap2_max_ntokens is not None:
         env_pairs.append(f"LLAMA_SER_CHEAP2_MAX_NTOKENS={cfg.env_ser_cheap2_max_ntokens}")
+    if cfg.env_ser_adaptive_ranges:
+        env_pairs.append(f"LLAMA_SER_ADAPTIVE_RANGES={cfg.env_ser_adaptive_ranges}")
+    if cfg.env_ser_adaptive_third_ratio is not None:
+        env_pairs.append(f"LLAMA_SER_ADAPTIVE_THIRD_RATIO={cfg.env_ser_adaptive_third_ratio}")
     full_cmd = ["/usr/bin/time", "-l", "env", *env_pairs, "caffeinate", "-dimsu", *cmd]
 
     wall_start = time.perf_counter()

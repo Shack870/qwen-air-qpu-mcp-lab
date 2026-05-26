@@ -21,6 +21,11 @@ This file is the lab board for serious, testable ideas. It separates what we tru
 
 - Added opt-in `LLAMA_ROUTER_CENSUS=/path` logging for the SER router path. It records layer, selected expert IDs, selected probabilities, active expert count, and selected probability mass during decode-sized rows.
 - First census on the record family (`ser 3,1`, cheap `24:30` top-2) showed the middle band `24:30` has the lowest selected top-3 mass (`~0.12-0.14`) and broad expert spread, while late layers are more concentrated but still not safely top-1.
+- Multi-prompt router census added on 2026-05-26 across Mars factual, Serbia factual, code, rewrite, and summary prompts. It flagged candidate top-2 islands around `6:10`, `18:22`, `28:32`, `30:34`, `40:43`, and `45:46`; fragile/protect layers included `1`, `11:14`, `22:26`, and `36:39`.
+- Static band stacking from the multi-prompt census did not beat the record: best stack was `6:10,18:22,30:34` at 12.41 tok/s under that run state, while larger stacks became repetitive or degraded. Safe-ish islands are still non-additive.
+- Broad protective subnetting also failed: cheapening most layers while preserving census-fragile bands topped out around 11.59 tok/s and trailed the same-state record control. This argues against a simple “top-2 everywhere except fragile layers” path.
+- Added an adaptive expert-undervolt prototype: `LLAMA_SER_ADAPTIVE_RANGES` plus `LLAMA_SER_ADAPTIVE_THIRD_RATIO` keeps the third expert when its router score remains close to the second expert. After caching the layer mask, the best quick retake was record lane plus adaptive `6:10,30:34` at 11.40 tok/s versus a same-state 10.64 control, useful but not record-grade yet.
+- Adaptive-third lesson: the third expert is often not weak. Multi-prompt census showed typical third/second ratios around `0.79-0.86`, so aggressive top-2 cuts are quality-risky and conservative adaptive cuts do not remove enough work to create a large speed win.
 - Inverted Routerclamp failed: global `ser 1,5` with selected layer rescues reached 15.63 tok/s, but every strict Serbia probe immediately collapsed into junk. The smallest quality-safe subnetwork is not a top-1 expert path with a few rescued bands.
 - Hotset clamp was prototyped and backed out. A Mars-only top-48 hotset slowed badly and caused repetition, and the implementation point polluted normal throughput. Router census remains useful; hotset clamping needs a broader corpus plus fallback and a less invasive implementation point.
 - App-state gating matters: one-off runs without pausing the Codex GPU helper fell to ~2-3 tok/s; the same short record-shape smoke recovered to 13.30 tok/s with the helper paused. Serious benchmark scripts should keep using the helper pause/resume wrapper.
@@ -32,6 +37,7 @@ This file is the lab board for serious, testable ideas. It separates what we tru
 - Best quality-safe cheap-band result so far: global `ser 3,1` with layers `24:30` forced to top-2 (`LLAMA_SER_CHEAP_RANGES=24:30`, min `2`, thresh `1.0`). It passed strict Serbia/Mars/prime and reached 13.58 tok/s in the ridge sweep.
 - Individually safe top-2 bands also include `6:12` and `12:18`, but stacking them with `24:30` broke executable prime code. Safe islands are non-additive.
 - Current lesson: fewer experts globally is the wrong lever by itself. The active leap is task-aware or phase-aware Routerclamp: cheapen only safe layers, and possibly only during decode after a full-quality prompt read.
+- New active lesson: a static active subnetwork is too blunt. The promising next version is stateful Routerclamp: start from the 14.03-safe `24:30` lane, then vary expert count by prompt phase, token confidence, or output mode rather than by fixed layer ranges alone.
 
 ## Serious Moonshots
 
