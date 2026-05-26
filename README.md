@@ -29,7 +29,7 @@ This is not a claim that an IBM QPU ran Qwen. It did not.
 The core contribution is the synchronized loop:
 
 ```text
-Jody sets the goal and constraints
+Human Experimenter sets the goal and constraints
     -> Codex proposes, edits, runs, logs, and interprets experiments
     -> the MacBook runs real llama.cpp inference and judges candidates
     -> the local database scores the run frontier
