@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantum-Enhanced Hyperparameter Tuning for High-Performance On-Device CPU-Only Inference of Mixture-of-Experts LLMs on Legacy Hardware</title>
+  <style>
+@page {
+  size: Letter;
+  margin: 0.85in 0.82in 0.9in 0.82in;
+}
+html {
+  background: #ffffff;
+}
+body {
+  max-width: 7.2in;
+  margin: 0 auto;
+  color: #111111;
+  background: #ffffff;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 10.6pt;
+  line-height: 1.31;
+  hyphens: auto;
+}
+h1, h2, h3, h4 {
+  color: #111111;
+  font-family: "Times New Roman", Times, serif;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h1 {
+  font-size: 18pt;
+  font-weight: 700;
+  line-height: 1.14;
+  text-align: center;
+  margin: 0 0 0.55em 0;
+}
+h1 + p {
+  text-align: center;
+  margin: 0.12em 0;
+  font-size: 10.8pt;
+}
+h1 + p + p {
+  text-align: center;
+  margin: 0.12em 0 1.15em 0;
+  font-size: 10.2pt;
+}
+h1 + p + p + p {
+  text-align: center;
+  margin: 0.12em 0 1.2em 0;
+  font-size: 9.5pt;
+}
+h2 {
+  font-size: 12pt;
+  font-weight: 700;
+  margin: 1.05em 0 0.36em 0;
+}
+h2#abstract {
+  text-align: center;
+  font-size: 11pt;
+  margin-top: 0.65em;
+  margin-bottom: 0.25em;
+}
+h2#abstract + p,
+h2#abstract + p + p,
+h2#abstract + p + p + p {
+  font-size: 9.8pt;
+  line-height: 1.24;
+  margin-left: 0.38in;
+  margin-right: 0.38in;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  margin: 0.85em 0 0.25em 0;
+}
+h4 {
+  font-size: 10.6pt;
+  font-weight: 700;
+  font-style: italic;
+  margin: 0.7em 0 0.2em 0;
+}
+p {
+  margin: 0.38em 0;
+}
+p, li {
+  orphans: 3;
+  widows: 3;
+}
+ol, ul {
+  margin-top: 0.25em;
+  margin-bottom: 0.45em;
+  padding-left: 1.4em;
+}
+li {
+  margin: 0.16em 0;
+}
+a {
+  color: #111111;
+  text-decoration: underline;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #f7f7f7;
+  border: 0.4pt solid #d8d8d8;
+  border-radius: 0;
+  padding: 6px 7px;
+  font-size: 8pt;
+  line-height: 1.18;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+code {
+  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.86em;
+  background: #f7f7f7;
+  padding: 0.04em 0.18em;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+}
+blockquote {
+  margin: 0.65em 0 0.65em 0.18in;
+  padding-left: 0.14in;
+  border-left: 1.5pt solid #777777;
+  color: #111111;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.7em 0;
+  font-size: 9pt;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+th, td {
+  border: 0.4pt solid #c8c8c8;
+  padding: 4px 5px;
+  vertical-align: top;
+}
+th {
+  background: #f1f1f1;
+  font-weight: 700;
+}
+img {
+  max-width: 95%;
+  height: auto;
+  display: block;
+  margin: 0.55em auto;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+hr {
+  border: 0;
+  border-top: 0.4pt solid #c8c8c8;
+  margin: 0.8em 0;
+}
+</style>
+</head>
+<body>
+  <h1 id="quantum-enhanced-hyperparameter-tuning-for-high-performance-on-device-cpu-only-inference-of-mixture-of-experts-llms-on-legacy-hardware">Quantum-Enhanced Hyperparameter Tuning for High-Performance On-Device CPU-Only Inference of Mixture-of-Experts LLMs on Legacy Hardware</h1>
+<p>Jody Shackelford, B.C.S., M.S. student, University of Arkansas Grantham<br>
+with Codex/GPT-5 as AI research collaborator and experiment agent</p>
+<p>Repository: <a href="https://github.com/Shack870/qwen-air-qpu-mcp-lab">Shack870/qwen-air-qpu-mcp-lab</a><br>
+Preprint version: May 27, 2026</p>
+<h2 id="abstract">Abstract</h2>
+<p>Using a single quantum-enhanced Karpathy-style autoresearch loop, where Codex/GPT-5 drove the experimental cycle and IBM Quantum reshaped the candidate frontier inside that loop by sampling compact QUBO search spaces, I improved CPU-only inference of <code>Qwen3-30B-A3B-Instruct-2507-GGUF</code> on a 2017 Intel MacBook Air by 155.9x, from approximately 0.09 to a quality-gated 14.03 generation tokens/sec at 16,384 context. The experiment used a 30.5B-parameter Mixture-of-Experts (MoE) language model with 3.3B activated parameters on a host machine with only 8GB RAM. I ran the project as a synchronized hybrid quantum optimization lab: Codex proposed, edited, executed, logged, and interpreted experiments; the MacBook judged each candidate through real inference; and IBM Quantum acted inside the same loop by sampling QUBO formulations derived from the run database.</p>
+<p>The work unfolded in two phases of one loop. In the initial classical phase, Codex and I used systems optimization alone: llama.cpp rebuilds, mmap discipline, quantized Flash Attention, q6_0 KV cache, expert-scheduling experiments, thermal gating, and process isolation. That moved the machine from proof-of-life performance to a 6.49 tokens/sec frontier, which I consider a meaningful legacy-hardware result by itself. In the quantum-enhanced phase, the same loop gained a Model Context Protocol (MCP) bridge to IBM Quantum hardware. Codex still ran the local experiments, interpreted failures, and edited the harness, but the candidate-selection step now incorporated QPU samples from compact QUBO formulations. That produced a 13.12 tokens/sec jump and ultimately the 14.03 tokens/sec strict record. A faster 16.53 tokens/sec lane was observed, but I rejected it because the output lost coherence. A clean-room run with Codex closed reached 13.91 tokens/sec, suggesting that the record lane was not simply an artifact of Codex consuming memory.</p>
+<p>The contribution is not a claim that quantum hardware ran the language model. It did not. The contribution is a reproducible hybrid quantum research workflow for discovering quality-preserving operating regimes in routed MoE inference. I treated the model's active expert path as an empirical systems object: measure it, constrain it, quality-gate it, and let a QPU-informed candidate-selection step inside the Codex autoresearch loop decide which configurations deserved real hardware tests next.</p>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>This project began with a deliberately hard question: can a dedicated 2017 Intel MacBook Air with 8GB RAM run a modern 30B-class MoE model in a way that is not merely symbolic, but usable enough to be scientifically interesting?</p>
+<p>The machine was not chosen because it was ideal. It was chosen because it was wrong for the job in almost every conventional way. It has a 1.8GHz dual-core Intel Core i5, 8GB of 1600MHz LPDDR3 memory, Intel HD Graphics 6000, and an internal PCIe SSD. Apple lists the 2017 MacBook Air test systems as tested in May 2017. The first public version of <em>Attention Is All You Need</em> was submitted to arXiv on June 12, 2017. In other words, the hardware predates the first public Transformer paper.</p>
+<p>That historical mismatch is part of the scientific appeal. I was not trying to prove that a 2017 MacBook Air is a good LLM computer. I was trying to find out how far a modern MoE can be pushed on hardware that should not obviously be able to run it interactively.</p>
+<p>The result was a 155.9x improvement from the first lab-notebook baseline of approximately 0.09 tokens/sec to a strict 14.03 tokens/sec record. The shape of that story matters:</p>
+<ol>
+<li>Classical systems work moved the machine from barely alive to 6.49 tokens/sec.</li>
+<li>Embedding IBM Quantum candidate sampling into the Codex loop changed the search dynamics and produced a 13.12 tokens/sec jump.</li>
+<li>Continued Codex-driven local refinement inside that same loop produced a quality-gated 14.03 tokens/sec record.</li>
+<li>A 16.53 tokens/sec speed-only lane revealed the boundary where speed outran coherence.</li>
+</ol>
+<p><img alt="Throughput progression" src="../figures/throughput_progression.svg"></p>
+<p>I wrote this paper from my perspective as the investigator driving the experiment. Codex/GPT-5 acted as a research collaborator inside the loop: reading logs, proposing experiments, editing scripts, building the MCP/QPU harness, decoding IBM Quantum samples into llama.cpp candidates, and helping interpret results. The final benchmark claims remain grounded in local run logs and SQLite records.</p>
+<h2 id="2-model-and-hardware">2. Model and Hardware</h2>
+<p>The target model was <a href="https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507">Qwen3-30B-A3B-Instruct-2507</a>, accessed through the <a href="https://huggingface.co/byteshape/Qwen3-30B-A3B-Instruct-2507-GGUF">ByteShape GGUF release</a>. I used the <code>Q3_K_S</code> 2.66bpw quant:</p>
+<pre><code class="language-text">Qwen3-30B-A3B-Instruct-2507-Q3_K_S-2.66bpw.gguf
+</code></pre>
+<p>The local metadata reported:</p>
+<ul>
+<li>architecture: qwen3moe</li>
+<li>total parameters: 30.532B</li>
+<li>local file size: 9.471 GiB</li>
+<li>BPW: 2.664</li>
+<li>layers: 48</li>
+<li>experts: 128</li>
+<li>active experts: 8</li>
+<li>native context length: 262,144 tokens</li>
+</ul>
+<p>The host system:</p>
+<ul>
+<li>2017 13-inch Intel MacBook Air</li>
+<li>1.8GHz dual-core Intel Core i5</li>
+<li>8GB 1600MHz LPDDR3 RAM</li>
+<li>Intel HD Graphics 6000</li>
+<li>internal PCIe SSD, more than 200GB free during the project</li>
+<li>macOS 12.7.6</li>
+</ul>
+<p>The record inference mode:</p>
+<ul>
+<li>CPU-only</li>
+<li>no GPU layers</li>
+<li>mmap enabled</li>
+<li>no mlock</li>
+<li>16,384 context</li>
+<li>q6_0/q6_0 KV cache</li>
+<li>quantized Flash Attention enabled in the local llama.cpp build</li>
+</ul>
+<p>The strict 14.03 tokens/sec run reported:</p>
+<ul>
+<li>AVX, AVX2, FMA, F16C, and BLAS enabled</li>
+<li>no AVX512</li>
+<li>no GPU offload</li>
+<li>zero swaps</li>
+<li>9 page faults</li>
+<li>peak RSS 5.23GB</li>
+</ul>
+<p>The most important architectural fact is that this is not a dense model. A dense model forces every token through the same full parameter path. This MoE model has a large total parameter reservoir, but a much smaller routed active path per token. That made the project a routed-systems optimization problem, not just a "make llama.cpp faster" exercise.</p>
+<h2 id="3-related-work-and-inspiration">3. Related Work and Inspiration</h2>
+<p>Dan Woods' <a href="https://github.com/danveloper/flash-moe">Flash-MoE</a> was the conceptual spark. Flash-MoE shows that large MoE inference can be made practical by exploiting sparsity, streaming active expert weights, using SSD and the OS page cache intelligently, and avoiding dense-model assumptions. I could not reproduce Dan's implementation path on this MacBook Air. I did not have Apple Silicon, a large unified-memory pool, or a useful Metal route. But the mental model transferred directly: treat the MoE as a routed system and search for the active path that matters.</p>
+<p>Karpathy's <a href="https://github.com/karpathy/autoresearch">autoresearch</a> influenced the experimental process. I treated the lab as a loop:</p>
+<pre><code class="language-text">propose -&gt; edit -&gt; run -&gt; log -&gt; score -&gt; keep or discard -&gt; propose again
+</code></pre>
+<p>That loop became much more powerful when paired with Codex. Codex could keep the experiment moving, read logs faster than I could, build scripts, summarize failures, and translate high-level hunches into concrete benchmark runs. The important twist in this project is that I did not bolt IBM Quantum onto the side as a separate experiment. I placed IBM Quantum inside the loop at the candidate-selection step, turning the loop itself into a quantum-enhanced Karpathy-style autoresearch system:</p>
+<pre><code class="language-text">Codex proposes and edits
+    -&gt; MacBook benchmarks
+    -&gt; SQLite logs
+    -&gt; objective scoring
+    -&gt; QUBO compression
+    -&gt; IBM Quantum samples candidate bitstrings
+    -&gt; Codex decodes those samples into candidate configs
+    -&gt; Codex tests the next configurations locally
+</code></pre>
+<p>That is the core news of the project: a practical, local, quantum-enhanced autoresearch loop where Codex and IBM Quantum operated in sync to optimize modern MoE inference on legacy hardware.</p>
+<p>The Raspberry Pi community gave me an external comparison target. A Reddit post by <code>u/jslominski</code> reported <a href="https://www.reddit.com/r/LocalLLaMA/comments/1rywym9/followup_qwen3_30b_a3b_at_78_ts_on_a_raspberry_pi/">Qwen3-30B-A3B-Instruct-2507-GGUF Q3_K_S 2.66bpw at 7-8 tokens/sec on a Raspberry Pi 5 8GB with SSD</a>, crediting <code>u/PaMRxR</code> for the ByteShape quant lead and linking <a href="https://github.com/potato-os/core">Potato OS</a>. ByteShape's own blog reports 8.48 TPS for a 2.66bpw Pi 5 16GB configuration. My strict 14.03 tokens/sec result on the 2017 Intel MacBook Air nearly doubles the Reddit-reported 7-8 tokens/sec 8GB Pi range while using a different CPU-only path.</p>
+<p>IBM Quantum and Qiskit provided the quantum-classical candidate-selection primitive inside the loop. The quantum processor did not accelerate inference. Instead, QPU samples reshaped the candidate frontier that Codex tested next. MCP provided the tool boundary so Codex could interact with the benchmark runner, optimizer, QUBO builder, and IBM adapter in a structured way.</p>
+<h2 id="4-method">4. Method</h2>
+<p>The method is best understood as one quantum-enhanced Karpathy loop. I used the same basic research rhythm that makes autoresearch powerful, but I inserted QPU-backed candidate sampling between "score" and "test the next thing." This turned a human/AI trial-and-error loop into a synchronized hybrid quantum optimization loop:</p>
+<pre><code class="language-text">human goal and constraints
+    -&gt; Codex proposes an experiment
+    -&gt; Codex edits scripts or configs
+    -&gt; MacBook runs llama.cpp benchmark
+    -&gt; logs are parsed into SQLite
+    -&gt; objective function scores the run
+    -&gt; promising local frontier is compressed into QUBO
+    -&gt; IBM Quantum samples candidate bitstrings
+    -&gt; Codex decodes samples into new configs
+    -&gt; the MacBook judges them with real inference
+    -&gt; Codex updates the frontier
+</code></pre>
+<p>This is different from merely running a grid search. The loop combines human scientific taste, AI-assisted coding, local empirical measurement, and QPU candidate sampling. The quantum part did not replace classical optimization, and Codex did not operate separately from the QPU results. The QPU informed the candidate frontier; Codex interpreted and executed that frontier; the MacBook judged it; the resulting data fed the next loop.</p>
+<h3 id="41-measurement-discipline">4.1 Measurement Discipline</h3>
+<p>Every serious run was logged to SQLite. I recorded:</p>
+<ul>
+<li>label and source</li>
+<li>full config JSON</li>
+<li>prompt</li>
+<li>llama.cpp binary and commit</li>
+<li>model path</li>
+<li>context, batch, ubatch, and threads</li>
+<li>KV cache types</li>
+<li>Flash Attention state</li>
+<li>smart expert reduction settings</li>
+<li>stdout tail and timings</li>
+<li>peak RSS</li>
+<li>page faults and swaps when available</li>
+</ul>
+<p>The benchmark objective favored generation throughput, but I did not accept incoherent output as a win. This became essential later, because the fastest observed lane reached 16.53 tokens/sec but emitted broken text.</p>
+<h3 id="42-phase-one-classical-systems-optimization">4.2 Phase One: Classical Systems Optimization</h3>
+<p>Before I introduced IBM Quantum, I pushed the machine using classical systems work only. This included:</p>
+<ul>
+<li>building llama.cpp from source instead of relying on Homebrew binaries</li>
+<li>disabling GPU and Metal paths on the Intel Air</li>
+<li>keeping mmap enabled</li>
+<li>avoiding mlock</li>
+<li>testing context, batch, and ubatch ladders</li>
+<li>sweeping q4/q6/q8 KV cache options</li>
+<li>enabling quantized Flash Attention with <code>-DGGML_IQK_FA_ALL_QUANTS=ON</code></li>
+<li>testing thread and batch-thread combinations</li>
+<li>using process-priority and clean-room checks</li>
+<li>cooling the machine between important runs</li>
+<li>controlling prompts and output length</li>
+</ul>
+<p>This phase moved the machine from approximately 0.09 tokens/sec to 6.49 tokens/sec.</p>
+<p>I want to emphasize this point because it is easy to let the quantum result steal the whole story. The classical phase alone is significant. It showed that a 2017 8GB Intel laptop could move from barely generating to usable MoE inference through disciplined CPU-only engineering.</p>
+<h3 id="43-phase-two-quantum-informed-candidate-selection">4.3 Phase Two: Quantum-Informed Candidate Selection</h3>
+<p>After the classical frontier stabilized around 6.49 tokens/sec, I made the existing Codex loop quantum-enhanced at the candidate-selection boundary. I did this because manual sweeps and local heuristics had started to circle the same region. The question became: how should the loop choose the next promising configurations?</p>
+<p>The MCP-style harness exposed narrow tools:</p>
+<ul>
+<li>benchmark runner</li>
+<li>experiment database</li>
+<li>objective scorer</li>
+<li>classical optimizer</li>
+<li>QUBO builder</li>
+<li>IBM Quantum adapter</li>
+<li>QPU job/result decoder</li>
+</ul>
+<p>The QPU did not inspect the MacBook's memory state, page cache, or KV cache. Instead, the loop compressed local benchmark evidence into small binary optimization problems:</p>
+<pre><code class="language-text">local benchmark runs
+    -&gt; stability-aware objective score
+    -&gt; binary candidate encoding
+    -&gt; QUBO / Ising-style formulation
+    -&gt; IBM QPU sampling
+    -&gt; bitstrings
+    -&gt; Codex-decoded llama.cpp configs
+    -&gt; real MacBook benchmark
+</code></pre>
+<p>The MacBook remained the judge. The QPU reshaped the candidate frontier. Codex turned sampled bitstrings into concrete configs and then ran the local tests that proved or disproved them.</p>
+<p>IBM jobs in the project log used backends including <code>ibm_fez</code>, <code>ibm_kingston</code>, and <code>ibm_marrakesh</code>, with QUBOs between 8 and 14 variables and 128 to 320 shots. One important QUBO encoded batch-size, ubatch-size, and KV-cache choices around the hot lane:</p>
+<ul>
+<li><code>batch_1792</code>, <code>batch_2048</code>, <code>batch_2304</code>, <code>batch_2560</code>, <code>batch_2816</code>, <code>batch_3072</code>, <code>batch_3328</code></li>
+<li><code>ubatch_80</code>, <code>ubatch_96</code>, <code>ubatch_112</code>, <code>ubatch_128</code></li>
+<li><code>kv_q6_q6</code>, <code>kv_k6_v4</code>, <code>kv_q4_q4</code></li>
+</ul>
+<p>The inflection point was run 635:</p>
+<ul>
+<li>label: <code>qpu_top1_b2304_ub96_repeat2</code></li>
+<li>source: <code>qpu-record-drive</code></li>
+<li>generation: 13.12 tokens/sec</li>
+<li>prompt eval: 15.59 tokens/sec</li>
+<li>context: 16,384</li>
+<li>batch/ubatch: 2304/96</li>
+<li>KV: q6_0/q6_0</li>
+<li>expert scheduling: <code>3,1</code></li>
+<li>swaps: 0</li>
+</ul>
+<p>This was the "boom" result. It moved the lab from a 6.49 tokens/sec classical frontier to 13.12 tokens/sec. In my view, this is where the autoresearch loop visibly became a hybrid quantum optimization loop rather than a manual or purely classical search.</p>
+<p><img alt="Quantum-guided search jump" src="../figures/qpu_jump.svg"></p>
+<h3 id="44-routerclamp-and-quality-gated-expert-scheduling">4.4 Routerclamp and Quality-Gated Expert Scheduling</h3>
+<p>The most productive inference idea was what I called Routerclamp: a controlled search over expert-scheduling regimes. I was not trying to make a smaller model pretend to be Qwen. I was trying to discover which routed execution regimes preserve useful output quality on this hardware.</p>
+<p>The strict record lane used:</p>
+<pre><code class="language-text">ctx_size                 16384
+threads                  4
+threads_batch            4
+batch_size               2456
+ubatch_size              144
+cache_type_k             q6_0
+cache_type_v             q6_0
+flash_attn               true
+smart_expert_reduction   3,1
+env_ser_cheap_ranges     24:30
+env_ser_cheap_min        2
+env_ser_cheap_thresh     1.0
+VECLIB_MAXIMUM_THREADS   1
+OMP_WAIT_POLICY          ACTIVE
+OMP_DYNAMIC              FALSE
+n_predict                128
+temp                     0.0
+ignore_eos               true
+</code></pre>
+<p>The interpretation:</p>
+<ul>
+<li>keep the model mmap-backed</li>
+<li>keep KV at q6_0 for stability</li>
+<li>use a large enough batch/ubatch to unlock throughput</li>
+<li>reduce expert cost only in carefully chosen layer bands</li>
+<li>use deterministic prompts for evaluation</li>
+<li>reject settings that cross the speed/quality boundary</li>
+</ul>
+<h2 id="5-results">5. Results</h2>
+<h3 id="51-main-record">5.1 Main Record</h3>
+<p>The strict quality-gated record was:</p>
+<ul>
+<li>run id: 1490</li>
+<li>timestamp: 2026-05-26T03:35:59+00:00</li>
+<li>label: <code>near_b2456_ub144</code></li>
+<li>source: <code>thermal-gated-nearmiss-pass</code></li>
+<li>prompt: Mars fact continuation</li>
+<li>generation throughput: 14.03 tokens/sec</li>
+<li>prompt eval throughput: 17.50 tokens/sec</li>
+<li>total time: 10.47 seconds</li>
+<li>context: 16,384</li>
+<li>peak RSS: 5.23GB</li>
+<li>page faults: 9</li>
+<li>swaps: 0</li>
+<li>quality flag: <code>strict_passed</code></li>
+</ul>
+<p>Prompt:</p>
+<pre><code class="language-text">&lt;|im_start|&gt;user
+Continue this comma-separated list of Mars facts: red planet, thin atmosphere,&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p>Recorded response:</p>
+<pre><code class="language-text">Here's a comma-separated list of Mars facts, continuing from your initial list:
+
+Red planet, thin atmosphere, largest known solar system body, Mars moon, frozen sea, polar ice caps, dusty atmosphere, methane plumes, surface features, active geology, radiation belts, frozen water ice, methane plumes, storm season, frozen CO2, polar vortex, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water, frozen CO2, frozen water
+</code></pre>
+<p>This response is not perfect. It repeats several facts and includes an inaccurate phrase, "largest known solar system body." I still include it because it is the exact 14.03 tokens/sec record output and because it is coherent enough to distinguish the strict lane from the corrupted speed-only lane. The shorter factual prompts below are stronger evidence of factual question-answer behavior.</p>
+<h3 id="52-speedquality-boundary">5.2 Speed/Quality Boundary</h3>
+<p>The top raw speed run reached 16.53 tokens/sec:</p>
+<ul>
+<li>run id: 814</li>
+<li>label: <code>routerclamp_speed_raw_b2304_ub104_ser1_5</code></li>
+<li>source: <code>routerclamp-supernova</code></li>
+<li>generation throughput: 16.53 tokens/sec</li>
+<li>prompt eval: 25.11 tokens/sec</li>
+<li>swaps: 0</li>
+<li>page faults: 3</li>
+</ul>
+<p>But the output was incoherent:</p>
+<pre><code class="language-text">percouplesPO122 hrs from my No inaceg: v100 Book Purch reduction3. First ake Italian ...
+</code></pre>
+<p>I do not claim 16.53 tokens/sec as the usable result. I report it as a boundary condition: it showed that the machine could decode faster, but not while preserving coherence. The real record is 14.03 tokens/sec with a strict-pass response.</p>
+<p><img alt="Speed quality boundary" src="../figures/quality_boundary.svg"></p>
+<h3 id="53-prompt-response-examples">5.3 Prompt Response Examples</h3>
+<p>I also ran direct prompt-response tests under the same 16k-context record-family configuration. Short factual prompts terminated cleanly. Longer creative prompts sometimes clipped at fixed token caps and showed more degradation, which I report as a limitation.</p>
+<p><img alt="Prompt example throughput" src="../figures/prompt_examples.svg"></p>
+<h4 id="factual-prompt-a-largest-us-state">Factual Prompt A: Largest U.S. State</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">What US state is the largest? Answer in one short sentence.
+</code></pre>
+<p>Run id: 1669<br>
+Generation throughput: 5.66 tokens/sec<br>
+Response:</p>
+<pre><code class="language-text">The largest U.S. state by land area is Alaska. [end of text]
+</code></pre>
+<h4 id="factual-prompt-b-yellowstone">Factual Prompt B: Yellowstone</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">In what state is Yellowstone National Park? Answer accurately in one short paragraph.
+</code></pre>
+<p>Run id: 1670<br>
+Generation throughput: 8.91 tokens/sec<br>
+Response:</p>
+<pre><code class="language-text">Yellowstone National Park is primarily located in the northwestern region of Wyoming, with a small portion extending into Montana and Idaho. [end of text]
+</code></pre>
+<h4 id="factual-prompt-c-state-versus-country">Factual Prompt C: State versus Country</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">What does it mean to be a State instead of a Country? Answer clearly and concisely.
+</code></pre>
+<p>Run id: 1671<br>
+Generation throughput: 11.20 tokens/sec<br>
+Response:</p>
+<pre><code class="language-text">In international relations, a &quot;state&quot; refers to a single, independent political entity with defined borders, a sovereign government, and recognized authority-typically a nation-state, such as Japan or France. The term &quot;country&quot; is often used interchangeably with &quot;state&quot; in everyday language, but in technical terms, &quot;state&quot; refers to a sovereign government with the power to govern itself, while &quot;country&quot; is a broader, more general term for a geographical and political reality. So, being a &quot;state&quot; means being a legally recognized sovereign nation, while &quot;being a country&quot; means having a government with real authority and global recognition-like a state in the international system. [end of text]
+</code></pre>
+<h4 id="creative-prompt-a-eagle-poem">Creative Prompt A: Eagle Poem</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">Write a poem about an Eagle who must persever and move forward after the heartbreak of losing an egg to a snake.
+</code></pre>
+<p>Run id: 1666<br>
+Generation throughput: 9.69 tokens/sec<br>
+Response excerpt:</p>
+<pre><code class="language-text">Upon a high crag, sharp as bone and bone,
+Where frost-wired winds and silence slyly creep,
+Rises the raptor- aloof, alone-
+And the shadow of silence, deep and deep.
+
+Its talons still grip the edge of the sky,
+Claws tightened against fire, raw and thin.
+Below, where ashen ailerons sigh-
+The mark of the snake, and the mark of the sky.
+</code></pre>
+<p>The poem clipped at 128 predicted tokens.</p>
+<h4 id="creative-prompt-b-gingerbread-house">Creative Prompt B: Gingerbread House</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">Describe how to build a Christmas gingerbread house.
+</code></pre>
+<p>Run id: 1667<br>
+Generation throughput: 10.25 tokens/sec<br>
+Response excerpt:</p>
+<pre><code class="language-text">Building a Christmas gingerbread house, also known as a &quot;gingerbread fort&quot; or &quot;gingerbread house,&quot; is a festive and fun activity-especially during the holiday season! ...
+</code></pre>
+<p>This response clipped before completing the recipe and contained odd wording. It demonstrates that the record configuration is useful for short factual/code snippets and small demos, but long-form generation still needs separate quality tuning.</p>
+<h4 id="creative-prompt-c-ufo-barber-comedy">Creative Prompt C: UFO Barber Comedy</h4>
+<p>Prompt:</p>
+<pre><code class="language-text">Output a short script of a comedy scene between a man and his barber after seeing a UFO.
+</code></pre>
+<p>Run id: 1668<br>
+Generation throughput: 10.21 tokens/sec<br>
+Response excerpt:</p>
+<pre><code class="language-text">Title: &quot;The Clipper &amp; The Cut&quot;
+Setting: A small, cozy, slightly shabby barber shop called &quot;Fuzzy's Trim &amp; Tidy&quot;
+Time: Late afternoon (slightly post-sunset)
+Characters:
+- Darryl - 50s, a laid-back customer who just moved into the adjacent apartment.
+- Earl &quot;Fuzz&quot; Fuzzler - 60s, the barber with electric-blue short hair, a goatee...
+</code></pre>
+<p>This clipped and did not obey the later "dialogue only" constraint, so I report it as a limitation, not as a quality proof.</p>
+<h2 id="6-novel-contributions">6. Novel Contributions</h2>
+<h3 id="61-broad-contribution">6.1 Broad Contribution</h3>
+<p>The central contribution is a first-person, reproducible, quantum-enhanced Karpathy-style research loop for MoE inference on legacy hardware. The complete lab was not a Codex loop plus a separate QPU experiment; it was one synchronized loop whose candidate frontier was repeatedly shaped by IBM Quantum samples. It included:</p>
+<ul>
+<li>an LLM collaborator</li>
+<li>a legacy MacBook benchmark target</li>
+<li>a SQLite experiment database</li>
+<li>a stability-aware objective function</li>
+<li>a QUBO builder</li>
+<li>IBM Quantum hardware access</li>
+<li>local scripts that converted sampled bitstrings into real llama.cpp configurations</li>
+</ul>
+<p>I draw the boundary carefully: the QPU did not run Qwen. The QPU helped reshape the search frontier that Codex tested on the MacBook. The novelty is the integration: Codex-driven autoresearch, local legacy-hardware inference benchmarks, and IBM Quantum candidate sampling operating as one research system.</p>
+<p>I have not found a prior public artifact combining all of the following:</p>
+<ol>
+<li>A 30B-total MoE model running locally on an 8GB legacy Intel laptop.</li>
+<li>CPU-only inference at 16k context.</li>
+<li>Quality-gated throughput above 14 tokens/sec.</li>
+<li>A Codex/LLM-driven Karpathy-style autoresearch loop whose candidate frontier was reshaped by IBM Quantum samples.</li>
+<li>A local MCP tool boundary for benchmark execution and QPU access.</li>
+<li>IBM Quantum QPU jobs used to sample compact hyperparameter/QUBO search spaces for LLM inference tuning.</li>
+<li>A public SQLite-backed run log connecting the quantum-informed loop, local benchmark outcomes, and rejected speed-only failures.</li>
+</ol>
+<h3 id="62-device-specific-contribution">6.2 Device-Specific Contribution</h3>
+<p>The device-specific claim is:</p>
+<blockquote>
+<p>A 2017 Intel MacBook Air with 8GB RAM, no useful LLM GPU offload, and a model file larger than physical memory achieved a quality-gated 14.03 generation tokens/sec on Qwen3-30B-A3B-Instruct-2507-GGUF at 16,384 context.</p>
+</blockquote>
+<p>This matters because the machine is not a modern AI workstation. It is a pre-Transformer-era consumer laptop. The result suggests that older hardware can still become a useful inference research platform when the model architecture, operating system behavior, and search process are treated as one coupled system.</p>
+<h3 id="63-conceptual-contribution">6.3 Conceptual Contribution</h3>
+<p>The key conceptual shift is:</p>
+<blockquote>
+<p>Discover quality-preserving routed execution regimes for a modern MoE on hardware not normally expected to run it interactively.</p>
+</blockquote>
+<p>I do not frame this as making a small model pretend to be the full model. I frame it as empirical routed-systems research. The MoE router, expert activation pattern, KV cache, batch geometry, CPU cache behavior, memory pressure, and benchmark objective all interact. The job is to find operating regimes where that interaction stays coherent and fast.</p>
+<p>The rejected 16.53 tokens/sec run matters because it proves the system can move beyond the quality frontier. The accepted 14.03 tokens/sec run matters because it shows where speed and coherence still overlap.</p>
+<h2 id="7-discussion">7. Discussion</h2>
+<p>The project advanced in phases:</p>
+<ol>
+<li>Proof of life: approximately 0.09 tokens/sec.</li>
+<li>llama.cpp and mmap discipline: low single-digit tokens/sec.</li>
+<li>batch, ubatch, KV, Flash Attention, and thermal tuning: 6.49 tokens/sec.</li>
+<li>IBM Quantum candidate sampling inside the Codex loop: 13.12 tokens/sec.</li>
+<li>continued local refinement within the same loop: 13.91 clean-room and 14.03 strict-pass.</li>
+<li>speed-only frontier: 16.53 tokens/sec, rejected as incoherent.</li>
+</ol>
+<p>The first three phases are the classical result. They show that the device can be made surprisingly capable without quantum help. The later phases are the same autoresearch loop operating in hybrid quantum mode. The point is not that Codex and the QPU made separate contributions in sequence; the point is that QPU-sampled candidates changed what the Codex-driven loop tested next, and those tests exposed the high-throughput regime that led to the record lane.</p>
+<p>The biggest lesson is that SSD capacity alone was not the speed win. The model file could live on disk, and mmap/page cache made survival possible, but decode speed came from finding a stable routed-compute regime that stayed inside a quality envelope.</p>
+<p>GPU offload also did not become the answer. The Intel HD Graphics 6000 shares system memory and lacks the modern kernels and bandwidth needed for this workload. Moving parts of the graph to that GPU risked overhead and contention. The useful acceleration came from:</p>
+<ul>
+<li>CPU-friendly quantized kernels</li>
+<li>q6 KV stability</li>
+<li>selective expert scheduling</li>
+<li>batch/ubatch geometry</li>
+<li>thermal/process isolation</li>
+<li>IBM Quantum candidate sampling inside the Codex autoresearch loop</li>
+</ul>
+<h2 id="8-limitations">8. Limitations</h2>
+<p>I do not claim that any 8GB old laptop can run every 30B MoE well.</p>
+<p>Known limits:</p>
+<ul>
+<li>The 14.03 record is prompt- and workload-sensitive.</li>
+<li>Long creative generations clipped at fixed token caps and sometimes degraded.</li>
+<li>The 16.53 tokens/sec lane was incoherent and is not claimed as usable.</li>
+<li>Short factual prompts can show lower measured tokens/sec because setup and prompt overhead dominate.</li>
+<li>The quantum contribution is indirect. It improves candidate selection inside the research loop, not inference math.</li>
+<li>Current quality gates are small and hand-designed.</li>
+<li>Stronger follow-up work should add systematic benchmark suites and repeated statistical confidence intervals.</li>
+<li>The local llama.cpp branch includes experimental expert scheduling behavior that should be independently validated.</li>
+</ul>
+<h2 id="9-reproducibility">9. Reproducibility</h2>
+<p>Artifacts included in this repository:</p>
+<ul>
+<li><code>data/qpu_lab.sqlite</code>: benchmark and quantum job database</li>
+<li><code>paper/data/selected_runs.csv</code>: paper run snapshot</li>
+<li><code>paper/data/milestones.csv</code>: milestone chart data</li>
+<li><code>paper/data/source_summary_top30.csv</code>: run-source summary</li>
+<li><code>paper/figures/*.svg</code>: regenerated figures</li>
+<li><code>qpu_mcp_lab/</code>: MCP-style quantum/classical harness</li>
+<li><code>scripts/</code>: benchmark and search drivers</li>
+<li><code>docs/REPRODUCIBILITY.md</code>: setup notes</li>
+<li><code>docs/RESULTS.md</code>: result summary</li>
+</ul>
+<p>To regenerate paper figures:</p>
+<pre><code class="language-bash">cd /Users/jodyshackelford/qwen-air-tests/qpu-mcp-lab
+python3 paper/make_figures.py
+</code></pre>
+<h2 id="10-conclusion">10. Conclusion</h2>
+<p>I began with an old MacBook Air and an unreasonable benchmark. The classical phase of the loop pushed the machine from approximately 0.09 to 6.49 tokens/sec. That alone showed that careful CPU-only systems work can make a modern MoE usable on legacy hardware. Then I made the same loop quantum-enhanced: the MCP/QPU bridge changed how Codex selected the next candidates. That synchronized loop moved the lab from 6.49 to a 13.12 tokens/sec breakthrough, and continued local refinement carried the result to a strict 14.03 tokens/sec record.</p>
+<p>The practical result is a 155.9x throughput improvement on a 2017 Intel MacBook Air running a 30.5B-total-parameter MoE at 16k context, CPU-only. The scientific result is a small hybrid quantum optimization lab for routed MoE inference: one quantum-enhanced Karpathy loop where an LLM collaborator, a legacy device, a benchmark database, and real QPU sampling worked in sync to push a system past what initially looked possible.</p>
+<p>The next question is:</p>
+<blockquote>
+<p>How far can quantum-assisted, quality-gated systems research push routed MoE inference on hardware previously considered out of bounds?</p>
+</blockquote>
+<h2 id="references">References</h2>
+<ol>
+<li>Vaswani et al., <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>, arXiv:1706.03762.</li>
+<li>Apple, <a href="https://support.apple.com/en-us/111924">MacBook Air (13-inch, 2017) Technical Specifications</a>.</li>
+<li>Qwen, <a href="https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507">Qwen3-30B-A3B-Instruct-2507 model card</a>.</li>
+<li>ByteShape, <a href="https://huggingface.co/byteshape/Qwen3-30B-A3B-Instruct-2507-GGUF">Qwen3-30B-A3B-Instruct-2507 GGUF files</a>.</li>
+<li>ByteShape, <a href="https://byteshape.com/blogs/Qwen3-30B-A3B-Instruct-2507/">A 30B Qwen Model Walks Into a Raspberry Pi... and Runs in Real Time</a>.</li>
+<li><code>u/jslominski</code>, <a href="https://www.reddit.com/r/LocalLLaMA/comments/1rywym9/followup_qwen3_30b_a3b_at_78_ts_on_a_raspberry_pi/">Qwen3 30B A3B at 7-8 t/s on a Raspberry Pi 5 8GB</a>.</li>
+<li>Potato OS, <a href="https://github.com/potato-os/core">potato-os/core</a>.</li>
+<li>Dan Woods, <a href="https://github.com/danveloper/flash-moe">flash-moe</a>.</li>
+<li>Andrej Karpathy, <a href="https://github.com/karpathy/autoresearch">autoresearch</a>.</li>
+<li>IBM Quantum, <a href="https://qiskit.qotlabs.org/docs/guides/qiskit-runtime-primitives">Introduction to Qiskit Runtime primitives</a>.</li>
+<li>IBM Quantum Learning, <a href="https://qiskit.qotlabs.org/learning/courses/quantum-computing-in-practice/utility-scale-qaoa">Utility-scale QAOA</a>.</li>
+<li>Model Context Protocol, <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools">Tools specification</a>.</li>
+</ol>
+</body>
+</html>
