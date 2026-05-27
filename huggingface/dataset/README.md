@@ -37,6 +37,7 @@ llama.cpp inference.
 
 - `paper/quantum_enhanced_legacy_moe_inference.md` - paper source
 - `paper/quantum_enhanced_legacy_moe_inference.pdf` - generated preprint PDF
+- `paper/arxiv/quantum_enhanced_legacy_moe_inference_arxiv.pdf` - arXiv-style submission PDF
 - `paper/data/public_runs.csv` - sanitized public run log
 - `paper/figures/*.svg` - generated figures
 - `docs/REPRODUCIBILITY.md` - validation protocol
