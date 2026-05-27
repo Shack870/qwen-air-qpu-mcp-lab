@@ -4,3 +4,4 @@ qiskit-ibm-runtime>=0.47.0
 qiskit-aer>=0.17.2
 numpy>=2.4
 pydantic>=2.13
+markdown>=3.10

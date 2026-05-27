@@ -12,5 +12,6 @@ data/*.sqlite
 data/*.sqlite-*
 logs/*
 !logs/.gitkeep
+dist/
 *.log
 .DS_Store

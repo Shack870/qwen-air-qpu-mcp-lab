@@ -1,0 +1,41 @@
+{
+  "title": "Qwen Air QPU/MCP Lab: Quantum-Enhanced Autoresearch for CPU-Only MoE Inference on Legacy Hardware",
+  "upload_type": "software",
+  "description": "Open-source artifacts for a quantum-enhanced Codex autoresearch loop that improved CPU-only Qwen3-30B-A3B-Instruct-2507-GGUF inference on a 2017 Intel MacBook Air from approximately 0.09 to a quality-gated 14.03 generation tokens/sec at 16,384 context.",
+  "creators": [
+    {
+      "name": "Shackelford, Jody",
+      "affiliation": "University of Arkansas Grantham"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Qwen3",
+    "Mixture-of-Experts",
+    "llama.cpp",
+    "CPU inference",
+    "legacy hardware",
+    "IBM Quantum",
+    "Qiskit",
+    "Model Context Protocol",
+    "autoresearch",
+    "benchmarking"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Shack870/qwen-air-qpu-mcp-lab",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://huggingface.co/spaces/Shack870/qwen-air-qpu-dashboard",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
