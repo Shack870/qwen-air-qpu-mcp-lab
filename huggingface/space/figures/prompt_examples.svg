@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #18222f; }
+    .title { font-size: 22px; font-weight: 700; }
+    .subtitle { font-size: 12px; fill: #506070; }
+    .axis { stroke: #b9c3cf; stroke-width: 1; }
+    .grid { stroke: #e4e9ef; stroke-width: 1; }
+    .label { font-size: 12px; fill: #29384a; }
+    .small { font-size: 11px; fill: #5c6978; }
+    .value { font-size: 12px; font-weight: 700; fill: #111827; }
+    .note { font-size: 11px; fill: #667085; }
+  </style>
+  <rect x="0" y="0" width="1100" height="650" fill="#ffffff"/>
+  <text class="title" x="86" y="36">Prompt Example Throughput</text>
+  <text class="subtitle" x="86" y="58">Representative responses under the same strict 16k-context configuration</text>
+  <line class="grid" x1="86" y1="500.0" x2="1058" y2="500.0"/>
+  <text class="small" text-anchor="end" x="76" y="504.0">0</text>
+  <line class="grid" x1="86" y1="440.3" x2="1058" y2="440.3"/>
+  <text class="small" text-anchor="end" x="76" y="444.3">2</text>
+  <line class="grid" x1="86" y1="380.6" x2="1058" y2="380.6"/>
+  <text class="small" text-anchor="end" x="76" y="384.6">4</text>
+  <line class="grid" x1="86" y1="320.9" x2="1058" y2="320.9"/>
+  <text class="small" text-anchor="end" x="76" y="324.9">6</text>
+  <line class="grid" x1="86" y1="261.1" x2="1058" y2="261.1"/>
+  <text class="small" text-anchor="end" x="76" y="265.1">8</text>
+  <line class="grid" x1="86" y1="201.4" x2="1058" y2="201.4"/>
+  <text class="small" text-anchor="end" x="76" y="205.4">10</text>
+  <line class="grid" x1="86" y1="141.7" x2="1058" y2="141.7"/>
+  <text class="small" text-anchor="end" x="76" y="145.7">12</text>
+  <line class="grid" x1="86" y1="82.0" x2="1058" y2="82.0"/>
+  <text class="small" text-anchor="end" x="76" y="86.0">14</text>
+  <line class="axis" x1="86" y1="82" x2="86" y2="500"/>
+  <line class="axis" x1="86" y1="500" x2="1058" y2="500"/>
+  <text class="small" text-anchor="middle" transform="translate(24 291.0) rotate(-90)">generation tokens/sec</text>
+  <rect x="86.0" y="210.7" width="145.3" height="289.3" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="158.7" y="202.7">9.69</text>
+  <text class="label" text-anchor="middle" x="158.7" y="524.0">Eagle poem</text>
+  <rect x="251.3" y="194.0" width="145.3" height="306.0" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="324.0" y="186.0">10.25</text>
+  <text class="label" text-anchor="middle" x="324.0" y="524.0">Gingerbread</text>
+  <rect x="416.7" y="195.2" width="145.3" height="304.8" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="489.3" y="187.2">10.21</text>
+  <text class="label" text-anchor="middle" x="489.3" y="524.0">UFO barber</text>
+  <rect x="582.0" y="331.0" width="145.3" height="169.0" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="654.7" y="323.0">5.66</text>
+  <text class="label" text-anchor="middle" x="654.7" y="524.0">Largest state</text>
+  <rect x="747.3" y="234.0" width="145.3" height="266.0" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="820.0" y="226.0">8.91</text>
+  <text class="label" text-anchor="middle" x="820.0" y="524.0">Yellowstone</text>
+  <rect x="912.7" y="165.6" width="145.3" height="334.4" rx="4" fill="#d97706"/>
+  <text class="value" text-anchor="middle" x="985.3" y="157.6">11.20</text>
+  <text class="label" text-anchor="middle" x="985.3" y="524.0">State/country</text>
+  <text class="note" x="86" y="624">Short outputs are dominated by prompt/setup overhead; long creative prompts clipped at fixed token caps.</text>
+</svg>

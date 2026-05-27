@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qwen Air QPU/MCP Lab</title>
+  <meta name="description" content="Quantum-enhanced autoresearch dashboard for Qwen3 MoE inference on a 2017 Intel MacBook Air." />
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #53616f;
+      --line: #d9e1e8;
+      --paper: #fbfcfd;
+      --blue: #2457a6;
+      --cyan: #087d8f;
+      --green: #277044;
+      --red: #9f2d37;
+      --gold: #8b6508;
+      --panel: #ffffff;
+      --shadow: 0 14px 36px rgba(26, 38, 54, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.16em;
+    }
+
+    .hero {
+      min-height: 74vh;
+      display: grid;
+      align-items: end;
+      padding: clamp(28px, 6vw, 72px);
+      background:
+        linear-gradient(rgba(14, 25, 38, 0.68), rgba(14, 25, 38, 0.50)),
+        url("figures/throughput_progression.svg");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+
+    .hero-inner {
+      max-width: 1120px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b7f3ff;
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin: 0;
+      font-size: clamp(2.35rem, 6vw, 5.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .subtitle {
+      max-width: 860px;
+      margin: 24px 0 0;
+      font-size: clamp(1.02rem, 2.2vw, 1.35rem);
+      color: #edf7ff;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 16px;
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(7px);
+    }
+
+    .button.primary {
+      background: #fff;
+      color: #17202a;
+      border-color: #fff;
+    }
+
+    main {
+      display: grid;
+      gap: 0;
+    }
+
+    section {
+      padding: clamp(34px, 7vw, 84px) clamp(20px, 6vw, 72px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.55rem, 3.3vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 880px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(1.55rem, 4vw, 2.55rem);
+      line-height: 1;
+      letter-spacing: 0;
+      color: var(--blue);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 30px;
+    }
+
+    .figure {
+      margin: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .figure figcaption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 28px;
+      max-width: 920px;
+    }
+
+    .flow div {
+      padding: 14px 16px;
+      border-left: 5px solid var(--cyan);
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      font-weight: 650;
+    }
+
+    .flow div:nth-child(5),
+    .flow div:nth-child(6) {
+      border-left-color: var(--gold);
+    }
+
+    .callout {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border: 1px solid #f0d48a;
+      border-left: 6px solid var(--gold);
+      border-radius: 8px;
+      background: #fff8e5;
+      color: #40320a;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .link-tile {
+      padding: 18px;
+      min-height: 112px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .link-tile strong {
+      display: block;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .link-tile span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    footer {
+      padding: 34px clamp(20px, 6vw, 72px);
+      color: var(--muted);
+      background: #eef3f7;
+    }
+
+    footer .inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .metrics,
+      .grid-2,
+      .links {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 86vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Quantum-enhanced autoresearch on legacy hardware</p>
+      <h1>Qwen3 30B MoE at 14.03 tok/s on a 2017 MacBook Air</h1>
+      <p class="subtitle">
+        A Codex-driven Karpathy-style loop used IBM Quantum candidate sampling to
+        reshape the search frontier for CPU-only routed MoE inference.
+      </p>
+      <nav class="actions" aria-label="Project links">
+        <a class="button primary" href="https://github.com/Shack870/qwen-air-qpu-mcp-lab">GitHub Repository</a>
+        <a class="button" href="https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab">Dataset Artifacts</a>
+        <a class="button" href="https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab/blob/main/paper/quantum_enhanced_legacy_moe_inference.md">Paper Draft</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="inner">
+        <h2>The result</h2>
+        <p class="lead">
+          The project improved local CPU-only inference from a proof-of-life
+          baseline of about 0.09 generation tokens/sec to a strict quality-gated
+          14.03 tokens/sec at 16,384 context on an 8GB Intel MacBook Air.
+        </p>
+        <div class="metrics" aria-label="Benchmark metrics">
+          <div class="metric"><strong>155.9x</strong><span>Throughput improvement over the first lab baseline</span></div>
+          <div class="metric"><strong>14.03</strong><span>Strict quality-gated generation tok/s</span></div>
+          <div class="metric"><strong>13.12</strong><span>First IBM Quantum-informed breakthrough run</span></div>
+          <div class="metric"><strong>16k</strong><span>Context length in the record-family configuration</span></div>
+          <div class="metric"><strong>8GB</strong><span>RAM in the 2017 Intel MacBook Air test machine</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="inner">
+        <h2>What the QPU did, and did not do</h2>
+        <p class="lead">
+          The IBM QPU did not run Qwen and did not accelerate the inference
+          kernel. It acted inside the research loop as a candidate sampler:
+          local benchmark history was compressed into compact QUBO search spaces,
+          sampled through IBM Quantum, decoded by Codex into llama.cpp configs,
+          and judged by the MacBook through real inference.
+        </p>
+        <div class="flow" aria-label="Research loop">
+          <div>Jody sets the research goal and constraints</div>
+          <div>Codex proposes, edits, runs, logs, and interprets experiments</div>
+          <div>The MacBook executes real CPU-only llama.cpp benchmarks</div>
+          <div>SQLite logs and objective scores define the frontier</div>
+          <div>Compact candidate choices become QUBO formulations</div>
+          <div>IBM Quantum samples candidate bitstrings</div>
+          <div>Codex decodes bitstrings into concrete configs</div>
+          <div>The MacBook judges speed and quality; the loop repeats</div>
+        </div>
+        <div class="callout">
+          This is a hybrid quantum optimization lab for systems research, not a
+          claim that quantum hardware performed language-model inference.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="inner">
+        <h2>Figures</h2>
+        <div class="grid-2">
+          <figure class="figure">
+            <img src="figures/throughput_progression.svg" alt="Throughput progression from 0.09 to 14.03 tokens per second" />
+            <figcaption>Milestone progression from proof-of-life to strict quality-gated record.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="figures/qpu_jump.svg" alt="Quantum-informed jump from 6.49 to 13.12 tokens per second" />
+            <figcaption>The first IBM Quantum-informed candidate burst changed the search frontier.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="figures/quality_boundary.svg" alt="Quality boundary showing 14.03 accepted and 16.53 rejected" />
+            <figcaption>Speed-only results were rejected when coherence failed.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="figures/prompt_examples.svg" alt="Prompt example throughput for factual and creative tests" />
+            <figcaption>Prompt examples expose the difference between short factual quality and long-form limitations.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="inner">
+        <h2>Artifacts</h2>
+        <p class="lead">
+          The repository and dataset include the paper draft, selected run
+          snapshots, figures, reproducibility protocol, security notes, and the
+          MCP-style quantum/classical harness.
+        </p>
+        <div class="links">
+          <a class="link-tile" href="https://github.com/Shack870/qwen-air-qpu-mcp-lab">
+            <strong>GitHub</strong>
+            <span>Source code, scripts, paper, and reproducibility docs.</span>
+          </a>
+          <a class="link-tile" href="https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab">
+            <strong>HF Dataset</strong>
+            <span>Paper artifacts, SVG figures, selected CSV run snapshots.</span>
+          </a>
+          <a class="link-tile" href="https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab/blob/main/docs/REPRODUCIBILITY.md">
+            <strong>Reproduce</strong>
+            <span>Validation protocol for rerunning the benchmark family.</span>
+          </a>
+          <a class="link-tile" href="https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab/blob/main/SECURITY.md">
+            <strong>Security</strong>
+            <span>IBM credential handling and real-QPU guardrails.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="inner">
+      <span>Jody Shackelford with Codex/GPT-5 as research collaborator</span>
+      <span>Qwen Air QPU/MCP Lab</span>
+    </div>
+  </footer>
+</body>
+</html>
