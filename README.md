@@ -64,6 +64,9 @@ See the paper draft:
 - `huggingface/space/` - Gradio leaderboard and config explorer source
 - `scripts/` - experiment drivers and reproducibility scripts
 - `docs/REPRODUCIBILITY.md` - validation protocol
+- `docs/COMMUNITY_VALIDATION.md` - guide for outside benchmark reports
+- `docs/HUGGINGFACE_BLOG_DRAFT.md` - draft article for the Hugging Face Blog editor
+- `docs/PRESS_KIT.md` - concise public launch material
 - `docs/RESULTS.md` - result narrative and milestone summary
 - `SECURITY.md` - secret handling and QPU guardrails
 - `config.example.json` - local config template

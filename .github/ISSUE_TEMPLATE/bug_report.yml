@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a harness, documentation, or reproduction issue.
+title: "Bug: <short description>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, llama.cpp commit, model quant, config.
+

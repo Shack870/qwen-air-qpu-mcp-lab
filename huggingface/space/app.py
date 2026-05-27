@@ -50,6 +50,27 @@ MILESTONES = pd.DataFrame(
     ]
 )
 
+QPU_PRESET = pd.DataFrame(
+    [
+        {"bit": "x0", "choice": "batch >= 2304", "why_it_mattered": "Large batches unlocked the high-throughput record family."},
+        {"bit": "x1", "choice": "ubatch around 96-144", "why_it_mattered": "Moderate ubatch balanced throughput and memory pressure."},
+        {"bit": "x2", "choice": "q6_0/q6_0 KV", "why_it_mattered": "q6 KV stayed coherent where lower-quality KV often degraded."},
+        {"bit": "x3", "choice": "SER 3,1 base lane", "why_it_mattered": "A stable routed-compute setting before narrower layer experiments."},
+        {"bit": "x4", "choice": "cheap layer band 24:30", "why_it_mattered": "Targeted expert reduction beat broad expert cuts."},
+        {"bit": "x5", "choice": "temperature 0.0", "why_it_mattered": "Deterministic prompts made quality gates easier to compare."},
+        {"bit": "x6", "choice": "16k context", "why_it_mattered": "Matched the record-family long-context target."},
+        {"bit": "x7", "choice": "no swaps / low page faults", "why_it_mattered": "Prevented speed wins that were only page-cache accidents."},
+    ]
+)
+
+QPU_CANDIDATES = {
+    "11011110": {"candidate": "qpu_top1_b2304_ub96_repeat2", "gen_tps": 13.12, "status": "breakthrough", "notes": "First clear QPU-informed jump over the 6.49 classical frontier."},
+    "11111110": {"candidate": "near_b2456_ub144", "gen_tps": 14.03, "status": "strict record family", "notes": "Local refinement around the QPU-revealed ridge."},
+    "11010110": {"candidate": "record-family neighbor", "gen_tps": 13.6, "status": "worth testing", "notes": "Likely good throughput, needs quality gate."},
+    "10010010": {"candidate": "conservative fallback", "gen_tps": 9.5, "status": "safe but slower", "notes": "Useful control lane."},
+    "11100000": {"candidate": "speed-only edge", "gen_tps": 16.5, "status": "reject unless quality passes", "notes": "Fast neighbors often crossed the coherence boundary."},
+}
+
 
 DISPLAY_COLS = [
     "id",
@@ -174,6 +195,54 @@ def source_summary() -> pd.DataFrame:
     return out
 
 
+def qpu_candidate_demo(bitstring: str, shots: int) -> tuple[str, pd.DataFrame]:
+    bits = "".join(ch for ch in bitstring if ch in "01")
+    if len(bits) < len(QPU_PRESET):
+        bits = bits.ljust(len(QPU_PRESET), "0")
+    bits = bits[: len(QPU_PRESET)]
+    selected = QPU_PRESET.copy()
+    selected["selected"] = [bit == "1" for bit in bits]
+
+    known = QPU_CANDIDATES.get(bits)
+    if known:
+        gen = known["gen_tps"]
+        status = known["status"]
+        candidate = known["candidate"]
+        notes = known["notes"]
+    else:
+        score = sum(bit == "1" for bit in bits)
+        gen = 7.0 + 0.75 * score
+        if bits[2] == "1":
+            gen += 1.0
+        if bits[4] == "1":
+            gen += 1.2
+        if bits[:3] == "111" and bits[4] == "0":
+            status = "speed-biased unknown"
+        elif score >= 5:
+            status = "plausible frontier candidate"
+        else:
+            status = "control candidate"
+        candidate = "synthetic decoded config"
+        notes = "Illustrative decode from the public bit encoding, not a real QPU job result."
+
+    summary = f"""
+### Candidate decode
+
+- Bitstring: `{bits}`
+- Candidate: **{candidate}**
+- Estimated / observed gen speed: **{gen:.2f} tok/s**
+- Status: **{status}**
+- Shots requested in this demo: **{shots}**
+
+{notes}
+
+In the actual lab, QPU samples were decoded into concrete `llama.cpp` configs and
+then tested locally. The quantum side changed which candidates Codex tested next;
+the MacBook remained the judge.
+"""
+    return summary, selected
+
+
 def img_tag(name: str, alt: str) -> str:
     return f'<img src="{FIGURE_BASE}/{name}" alt="{alt}" style="width:100%;height:auto;border:1px solid #d9e1e8;border-radius:8px;background:#fff;" />'
 
@@ -261,6 +330,35 @@ inference.
                 temp,
             ],
             [estimate_md, nearest],
+        )
+
+    with gr.Tab("QPU Candidate Demo"):
+        gr.Markdown(
+            """
+This tab illustrates the quantum bridge in the project. Compact binary choices
+encode candidate configuration decisions. A QPU samples bitstrings from the
+compressed search problem; Codex decodes the bitstrings into concrete benchmark
+configs; the MacBook tests them with real inference.
+
+The examples below are an educational view of the public encoding and known
+candidate neighborhood, not live QPU execution.
+"""
+        )
+        with gr.Row():
+            bitstring = gr.Textbox("11011110", label="Candidate bitstring")
+            shots = gr.Slider(64, 1024, value=256, step=64, label="QPU shots")
+        qpu_button = gr.Button("Decode candidate", variant="primary")
+        qpu_md = gr.Markdown()
+        qpu_table = gr.Dataframe(interactive=False, wrap=True, label="Bit choices")
+        qpu_button.click(qpu_candidate_demo, [bitstring, shots], [qpu_md, qpu_table])
+        gr.Markdown(
+            """
+Known examples:
+
+- `11011110`: first QPU-informed 13.12 tok/s breakthrough neighborhood
+- `11111110`: strict-record family neighborhood after local refinement
+- `11100000`: speed-edge warning neighborhood
+"""
         )
 
     with gr.Tab("Source Summary"):

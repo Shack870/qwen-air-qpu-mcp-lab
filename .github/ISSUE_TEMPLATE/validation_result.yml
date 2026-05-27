@@ -1,0 +1,81 @@
+name: Validation result
+description: Report an independent reproduction or benchmark attempt.
+title: "Validation: <hardware> / <quant> / <tok-s>"
+labels: ["validation", "benchmark"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing the Qwen Air QPU/MCP Lab. Please include enough detail
+        for another person to understand your result. Speed-only runs are useful,
+        but please mark whether output quality passed.
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware
+      description: CPU, RAM, storage, GPU if any.
+      placeholder: "2017 MacBook Air, i5, 8GB RAM, internal SSD"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and version
+      placeholder: "macOS 12.7.6"
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model and quant
+      placeholder: "Qwen3-30B-A3B-Instruct-2507-GGUF Q3_K_S 2.66bpw"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command or config JSON
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: speed
+    attributes:
+      label: Generation tokens/sec
+      placeholder: "14.03"
+    validations:
+      required: true
+  - type: input
+    id: prompt_eval
+    attributes:
+      label: Prompt eval tokens/sec
+      placeholder: "17.50"
+  - type: dropdown
+    id: quality
+    attributes:
+      label: Quality status
+      options:
+        - Passed strict gate
+        - Coherent but not strict-gated
+        - Speed-only / output degraded
+        - Failed / crash / OOM
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Prompt and output
+      description: Include enough output to judge coherence.
+    validations:
+      required: true
+  - type: textarea
+    id: counters
+    attributes:
+      label: Resource counters
+      description: RSS, page faults, swaps, thermals, context switches if available.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything surprising, including page cache state or background processes.
+
