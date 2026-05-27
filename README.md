@@ -10,6 +10,7 @@ the 2017 Intel MacBook Air Qwen3 MoE project.
 Public pages:
 
 - GitHub: <https://github.com/Shack870/qwen-air-qpu-mcp-lab>
+- GitHub preprint release: <https://github.com/Shack870/qwen-air-qpu-mcp-lab/releases/tag/v0.1-preprint>
 - Hugging Face collection: <https://huggingface.co/collections/Shack870/qwen-air-qpu-mcp-lab-6a174dd8d752afe40a429846>
 - Hugging Face dataset artifacts: <https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab>
 - Hugging Face interactive dashboard Space: <https://huggingface.co/spaces/Shack870/qwen-air-qpu-dashboard>
@@ -54,6 +55,7 @@ optimization lab for routed MoE inference.
 See the paper draft:
 
 - [Quantum-Enhanced Hyperparameter Tuning for High-Performance On-Device CPU-Only Inference of Mixture-of-Experts LLMs on Legacy Hardware](paper/quantum_enhanced_legacy_moe_inference.md)
+- [Generated preprint PDF](paper/quantum_enhanced_legacy_moe_inference.pdf)
 
 ## Repository Map
 

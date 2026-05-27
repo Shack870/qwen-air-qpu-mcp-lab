@@ -48,6 +48,6 @@ llama.cpp inference.
 ## Links
 
 - GitHub: https://github.com/Shack870/qwen-air-qpu-mcp-lab
+- GitHub preprint release: https://github.com/Shack870/qwen-air-qpu-mcp-lab/releases/tag/v0.1-preprint
 - Interactive Space: https://huggingface.co/spaces/Shack870/qwen-air-qpu-dashboard
 - Collection: https://huggingface.co/collections/Shack870/qwen-air-qpu-mcp-lab-6a174dd8d752afe40a429846
-
