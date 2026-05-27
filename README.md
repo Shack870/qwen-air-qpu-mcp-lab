@@ -10,8 +10,9 @@ the 2017 Intel MacBook Air Qwen3 MoE project.
 Public pages:
 
 - GitHub: <https://github.com/Shack870/qwen-air-qpu-mcp-lab>
+- Hugging Face collection: <https://huggingface.co/collections/Shack870/qwen-air-qpu-mcp-lab-6a174dd8d752afe40a429846>
 - Hugging Face dataset artifacts: <https://huggingface.co/datasets/Shack870/qwen-air-qpu-mcp-lab>
-- Hugging Face dashboard Space: <https://huggingface.co/spaces/Shack870/qwen-air-qpu-dashboard>
+- Hugging Face interactive dashboard Space: <https://huggingface.co/spaces/Shack870/qwen-air-qpu-dashboard>
 
 The short version:
 
@@ -57,8 +58,10 @@ See the paper draft:
 ## Repository Map
 
 - `paper/` - paper draft, selected run snapshots, and generated SVG figures
+- `paper/data/public_runs.csv` - sanitized public run log powering the Space dashboard
 - `qpu_mcp_lab/` - benchmark harness, objective scorer, optimizer, QUBO builder,
   IBM Quantum adapter, and MCP-style server
+- `huggingface/space/` - Gradio leaderboard and config explorer source
 - `scripts/` - experiment drivers and reproducibility scripts
 - `docs/REPRODUCIBILITY.md` - validation protocol
 - `docs/RESULTS.md` - result narrative and milestone summary
