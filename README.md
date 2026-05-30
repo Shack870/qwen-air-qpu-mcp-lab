@@ -60,6 +60,7 @@ See the paper draft:
 ## Repository Map
 
 - `paper/` - paper draft, selected run snapshots, and generated SVG figures
+- `paper/data/qpu_lab_public.sqlite` - sanitized public SQLite benchmark and QPU job database
 - `paper/data/public_runs.csv` - sanitized public run log powering the Space dashboard
 - `qpu_mcp_lab/` - benchmark harness, objective scorer, optimizer, QUBO builder,
   IBM Quantum adapter, and MCP-style server

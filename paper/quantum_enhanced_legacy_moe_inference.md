@@ -525,7 +525,7 @@ Known limits:
 
 Artifacts included in this repository:
 
-- `data/qpu_lab.sqlite`: benchmark and quantum job database
+- `paper/data/qpu_lab_public.sqlite`: sanitized public benchmark and quantum job database
 - `paper/data/selected_runs.csv`: paper run snapshot
 - `paper/data/milestones.csv`: milestone chart data
 - `paper/data/source_summary_top30.csv`: run-source summary
